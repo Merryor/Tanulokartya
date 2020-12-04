@@ -1,0 +1,23 @@
+@import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
+/* You can add global styles to this file, and also import other style files */
+
+/* Provide sufficient contrast against white background */
+* {
+  font-size: 14px;
+}
+
+a {
+  color: #0366d6;
+  font-size: 14px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+code {
+  color: #e01a76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}

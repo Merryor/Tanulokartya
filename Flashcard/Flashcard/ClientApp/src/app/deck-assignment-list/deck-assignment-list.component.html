@@ -1,0 +1,22 @@
+<p *ngIf="!(deckAssignmentsByDeck$ | async)"><em>Töltés...</em></p>
+
+<h3 id="tableLabel">Már hozzárendelt felhasználók:</h3>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="(deckAssignmentsByDeck$ | async)?.length>0">
+  <thead>
+    <tr>
+      <th>Név</th>
+      <th>Szerepkör</th>
+      <th *ngIf="isCoordinator">Szerepkör</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let da of (deckAssignmentsByDeck$ | async)">
+      <td>{{ da.user.name }}</td>
+      <td>{{ roleToString(da.user.roles) }}</td>
+      <td *ngIf="isCoordinator">
+        <a [routerLink]="" (click)="delete(da.deck.id, da.user.id)" class="btn btn-danger btn-sm float-right button">Törlés</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,60 @@
+<h1 id="tableLabel">Hozzárendelt kártyacsomagok</h1>
+
+<p *ngIf="!(deckAssignments$ | async)"><em>Töltés...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="(deckAssignments$ | async)?.length>0">
+  <thead>
+    <tr>
+      <th>Név</th>
+      <th>Tartalom</th>
+      <th>Korosztály</th>
+      <th>Sorszám</th>
+      <th>Szerző</th>
+      <th>Státusz</th>
+      <th>Aktiválva</th>
+      <th *ngIf="!isGraphic"></th>
+      <th *ngIf="isLector"></th>
+      <th *ngIf="isGraphic"></th>
+      <th *ngIf="isProf"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let deckAssignment of (deckAssignments$ | async)">
+      <td><a [routerLink]="['/assigned-card-list/', deckAssignment.deck.id]">{{ deckAssignment.deck.name }}</a></td>
+      <td>{{ deckAssignment.deck.content }}</td>
+      <td>{{ moduleToString(deckAssignment.deck.module) }}</td>
+      <td>{{ deckAssignment.deck.deck_number }}</td>
+      <td>{{ deckAssignment.deck.applicationUser.name }}</td>
+      <td>{{ statusToString(deckAssignment.deck.status) }}</td>
+      <td>{{ activateToString(deckAssignment.deck.activated) }}</td>
+      <td *ngIf="!isGraphic">
+        <a *ngIf="!isEditDisabled(deckAssignment.deck.status)" [routerLink]="['/deck-form/edit/', deckAssignment.deck.id]" class="btn btn-primary float-right button">Szerkeszt</a>
+        <a *ngIf="isEditDisabled(deckAssignment.deck.status)" [routerLink]="['/deck-form/edit/', deckAssignment.deck.id]" class="btn btn-primary float-right button disabled">Szerkeszt</a>
+      </td>
+      <td *ngIf="isLector">
+        <a *ngIf="deckAssignment.deck.status==0" [routerLink]="" (click)="stateUpdate(deckAssignment.deck.id, deckAssignment.deck.status+1)" class="btn btn-info float-right button">Lektorálva</a>
+        <a *ngIf="deckAssignment.deck.status>=1" [routerLink]="" class="btn btn-success float-right disabled button">Lektorálva
+          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+          </svg>
+        </a>
+      </td>
+      <td *ngIf="isGraphic">
+        <a *ngIf="deckAssignment.deck.status==1" [routerLink]="" (click)="stateUpdate(deckAssignment.deck.id, deckAssignment.deck.status+1)" class="btn btn-info btn-smfloat-right button">Grafikálva</a>
+        <a *ngIf="deckAssignment.deck.status>=2" [routerLink]="" class="btn btn-success float-right disabled button">Grafikálva
+          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+          </svg>
+        </a>
+      </td>
+      <td *ngIf="isProf">
+        <a *ngIf="deckAssignment.deck.status==2" [routerLink]="" (click)="stateUpdate(deckAssignment.deck.id, deckAssignment.deck.status+1)" class="btn btn-info float-right button">Szaklektorálva</a>
+        <a *ngIf="deckAssignment.deck.status>=3" [routerLink]="" class="btn btn-success float-right disabled button">Szaklektorálva
+          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+          </svg>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

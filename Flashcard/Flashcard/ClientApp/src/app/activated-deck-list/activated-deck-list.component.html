@@ -1,0 +1,25 @@
+<h1 id="tableLabel">Kész kártyacsomagok</h1>
+
+<p *ngIf="!(decks$ | async)"><em>Töltés...</em></p>
+
+<p>
+  <input type="text" [(ngModel)]="searchText" placeholder="Keresés név szerint" />
+</p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="(decks$ | async)?.length>0">
+  <thead>
+    <tr>
+      <th>Név</th>
+      <th>Tartalom</th>
+      <th>Korosztály</th>
+      <th>PDF</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let deck of decks$ | async | filter: searchText : 'name'">
+      <td>{{ deck.name }}</td>
+      <td>{{ deck.content }}</td>
+      <td>{{ moduleToString(deck.module) }}</td>
+      <td><a class="btn btn-primary mb-3" href="api/pdfcreator/{{deck.id}}">PDF</a></td>
+  </tbody>
+</table>

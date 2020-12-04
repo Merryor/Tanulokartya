@@ -1,0 +1,17 @@
+h2 {
+    text-align: center;
+    padding: 30px;
+    padding-bottom: 40px;
+}
+h4 {
+    text-align: center;
+    padding: 10px;
+}
+button {
+    padding: 8px;
+    margin-top: 8px;
+}
+input {
+    height: 30px;
+    font-size: 15px;
+}

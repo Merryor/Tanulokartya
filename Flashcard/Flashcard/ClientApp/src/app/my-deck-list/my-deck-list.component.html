@@ -1,0 +1,33 @@
+<h1 id="tableLabel">Saját kártyacsomagjaim</h1>
+
+<p *ngIf="!(decks$ | async)"><em>Töltés...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="(decks$ | async)?.length>0">
+  <thead>
+    <tr>
+      <th>Név</th>
+      <th>Tartalom</th>
+      <th>Korosztály</th>
+      <th>Sorszám</th>
+      <th>Szerző</th>
+      <th>Státusz</th>
+      <th>Aktiválva</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let deck of (decks$ | async)">
+      <td><a [routerLink]="['/assigned-card-list/', deck.id]">{{ deck.name }}</a></td>
+      <td>{{ deck.content }}</td>
+      <td>{{ moduleToString(deck.module) }}</td>
+      <td>{{ deck.deck_number }}</td>
+      <td>{{ deck.applicationUser.name }}</td>
+      <td>{{ statusToString(deck.status) }}</td>
+      <td>{{ activateToString(deck.activated) }}</td>
+      <td>
+        <a *ngIf="!isEditDisabled(deck.status)" [routerLink]="['/deck-form/edit/', deck.id]" class="btn btn-primary float-right button">Szerkeszt</a>
+        <a *ngIf="isEditDisabled(deck.status)" [routerLink]="['/deck-form/edit/', deck.id]" class="btn btn-primary float-right button disabled">Szerkeszt</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,69 @@
+<h1 id="tableLabel">Kártyacsomagok</h1>
+
+<p *ngIf="!(decks$ | async)"><em>Töltés...</em></p>
+
+<p *ngIf="isCardCreator"> <a [routerLink]="['/deck-form/add']" class="btn btn-primary mb-3 active">Új csomag</a></p>
+
+<!-- Search box && filter -->
+<p>
+  <a *ngIf="!activated" (click)="deckFilterByActivate()" class="btn btn-success float-right mb-3 active">Aktivált csomagok</a>
+  <a *ngIf="activated" (click)="deckFilterByActivate()" class="btn btn-info float-right mb-3 active">Összes csomag</a>
+</p>
+<p>
+  <input type="text" [(ngModel)]="searchText" placeholder="Keresés név szerint" />
+</p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="(decks$ | async)?.length>0">
+  <thead>
+    <tr>
+      <th>Név</th>
+      <th>Tartalom</th>
+      <th>Korosztály</th>
+      <th>Sorszám</th>
+      <th>Szerző</th>
+      <th>Státusz</th>
+      <th *ngIf="isAdmin"></th>
+      <th>Aktiválva</th>
+      <th *ngIf="isAdmin"></th>
+      <th *ngIf="isCoordinatorOrMainPerson"></th>
+      <th *ngIf="isCoordinator"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let deck of decks$ | async | filter: searchText : 'name' | filterBool: activated">
+      <td><a class="title" [routerLink]="['/card-list/', deck.id]">{{ deck.name }}</a></td>
+      <td>{{ deck.content }}</td>
+      <td>{{ moduleToString(deck.module) }}</td>
+      <td>{{ deck.deck_number }}</td>
+      <td>{{ deck.applicationUser.name }}</td>
+      <td>{{ statusToString(deck.status) }}</td>
+      <td *ngIf="isAdmin">
+        <a *ngIf="deck?.status==3" [routerLink]="" (click)="stateUpdate(deck.id, deck.status+1)" class="btn btn-info btn-sm float-right">Jóváhagyás</a>
+        <a *ngIf="deck?.status==4" [routerLink]="" class="btn btn-success btn-sm float-right disabled">Jóváhagyva
+          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+          </svg>
+        </a>        
+      </td>
+      <td *ngIf="deck.activated == true">{{ activateToString(deck.activated) }}
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="green" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+      </td>
+      <td *ngIf="deck.activated == false">{{ activateToString(deck.activated) }}
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-square-fill" fill="red" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm9.854 4.854a.5.5 0 0 0-.708-.708L8 7.293 4.854 4.146a.5.5 0 1 0-.708.708L7.293 8l-3.147 3.146a.5.5 0 0 0 .708.708L8 8.707l3.146 3.147a.5.5 0 0 0 .708-.708L8.707 8l3.147-3.146z"/>
+        </svg>
+      </td>
+      <td *ngIf="isAdmin">
+        <a *ngIf="deck?.activated" [routerLink]="" (click)="activation(deck.id)" class="btn btn-danger btn-sm float-right">Deaktiválás</a>
+        <a *ngIf="!deck?.activated && deck?.status==4" [routerLink]="" (click)="activation(deck.id)" class="btn btn-success btn-sm float-right">Aktiválás</a>
+      </td>
+      <td *ngIf="isCoordinatorOrMainPerson"><a [routerLink]="['/deck-assignment-form/', deck.id]" class="btn btn-info btn-sm float-right">Hozzárendelés</a></td>
+      <td *ngIf="isCoordinator">
+        <a *ngIf="deck?.status==0 || deck?.activated==true" [routerLink]="" (click)="initial_state(deck.id)" class="btn btn-danger btn-sm float-right disabled">Kezdeti státuszra</a>
+        <a *ngIf="deck?.status!=0 && deck?.activated!=true" [routerLink]="" (click)="initial_state(deck.id)" class="btn btn-danger btn-sm float-right">Kezdeti státuszra</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

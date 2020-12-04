@@ -1,0 +1,48 @@
+<h1>{{actionType}} kártyacsomag</h1>
+<form [formGroup]="form" (ngSubmit)="save()" #formDir="ngForm">
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Név</label>
+    <div class="col-md-12">
+      <input class="form-control" type="text" formControlName="name">
+    </div>
+    <div *ngIf="formDir.submitted && name.errors">
+      <span class="text-danger ml-3" *ngIf="name.errors.required && formDir.submitted">
+        Név kötelező
+      </span>
+      <span class="text-danger ml-3" *ngIf="name.errors.maxlength && formDir.submitted">
+        Név hossza maximum 200 karakter lehet
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Tartalom</label>
+    <div class="col-md-12">
+      <input class="form-control" type="text" formControlName="content">
+    </div>
+    <div *ngIf="formDir.submitted && content.errors">
+      <span class="text-danger ml-3" *ngIf="content.errors.required && formDir.submitted">
+        Tartalom kötelező
+      </span>
+      <span class="text-danger ml-3" *ngIf="content.errors.maxlength && formDir.submitted">
+        Tartalom hossza maximum 200 karakter lehet
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Korosztály</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="module">
+        <option *ngFor="let mod of modules" [value]="mod.key">{{mod.value}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="name.invalid && formDir.submitted">
+      Korosztály kötelező
+    </span>
+  </div>
+
+  <div class="form-group">
+    <button type="submit" class="btn btn-success float-right">Mentés</button>
+  </div>
+</form>

@@ -1,0 +1,19 @@
+h1 {
+    margin-bottom: 25px;
+    text-align: center;
+}
+a {
+    width: 80px;
+    padding: 6px;
+}
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+ }
+table {
+    margin-bottom: 20px;
+}
+td {
+    padding: 10px !important;
+    vertical-align: middle !important;
+}

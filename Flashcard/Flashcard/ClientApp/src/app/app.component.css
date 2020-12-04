@@ -1,0 +1,10 @@
+.nav-link {
+    padding: 6px;
+    margin: 6px;
+}
+.navbar {
+    border-radius: 0px;
+}
+.container {
+    max-width: 85%;
+}

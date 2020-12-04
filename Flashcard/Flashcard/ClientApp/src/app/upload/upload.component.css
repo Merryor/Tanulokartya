@@ -1,0 +1,18 @@
+.upload{
+    font-weight:bold;
+    color:#28a745;
+    margin-left: 15px;
+    line-height: 36px;
+}
+.error{
+    font-weight:bold;
+    color:#a72626;
+    margin-left: 15px;
+    line-height: 36px;
+}
+button {
+    padding: 8px;
+    margin: 15px;
+    margin-left: 0px;
+    margin-right: 0px;
+}

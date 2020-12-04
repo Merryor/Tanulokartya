@@ -1,0 +1,42 @@
+<h1 id="tableLabel">Felhasználók</h1>
+
+<p *ngIf="!(users$ | async)"><em>Töltés...</em></p>
+<p> <a [routerLink]="['/user-form/add']" class="btn btn-primary float-right mb-3">Új felhasználó</a></p>
+
+<!-- Search box -->
+<input type="text" [(ngModel)]="searchText" placeholder="Keresés név szerint" />
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="(users$ | async)?.length>0">
+  <thead>
+    <tr>
+      <th>Név</th>
+      <th>Telefon</th>
+      <th>Email</th>
+      <th>Munkahely</th>
+      <th>Korosztály</th>
+      <th>Korosztály később</th>
+      <th>Aktív</th>
+      <th>Szerepkör</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of (users$ | async) | filter: searchText : 'name'">
+      <td>{{ user.name }}</td>
+      <td>{{ user.phone }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.workplace }}</td>
+      <td>{{ moduleToString(user.create_module) }}</td>
+      <td>{{ moduleToString(user.will_create_module) }}</td>
+      <td>{{ activateToString(user.activated) }}</td>
+      <td>{{ roleToString(user.roles) }}</td>
+      <td>
+        <a *ngIf="user?.activated" [routerLink]="['/user-form/edit/', user.id]" class="btn btn-primary btn-sm float-right">Szerkeszt</a>
+        <a *ngIf="!user?.activated" [routerLink]="['/user-form/edit/', user.id]" class="btn btn-primary btn-sm float-right disabled">Szerkeszt</a>
+      </td>
+      <td><a *ngIf="user?.activated" [routerLink]="" (click)="deactivate(user.id)" class="btn btn-danger btn-sm float-right">Deaktivál</a>
+          <a *ngIf="!user?.activated" [routerLink]="" (click)="deactivate(user.id)" class="btn btn-danger btn-sm float-right disabled">Deaktivál</a></td>   
+    </tr>
+  </tbody>
+</table>

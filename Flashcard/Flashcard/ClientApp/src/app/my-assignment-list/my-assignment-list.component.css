@@ -1,0 +1,15 @@
+h1 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+a {
+    width: 80px;
+    padding: 6px;
+}
+table {
+    margin-bottom: 30px;
+}
+td {
+    padding: 10px !important;
+    vertical-align: middle !important;
+}

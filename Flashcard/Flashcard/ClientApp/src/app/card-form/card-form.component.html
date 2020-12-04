@@ -1,0 +1,139 @@
+<h1>{{actionType}} kártya</h1>
+<form [formGroup]="form" (ngSubmit)="save()" #formDir="ngForm">
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Típus</label>
+    <div class="col-md-12">
+      <textarea *ngIf="isTextEditable()" class="form-control" rows="2" formControlName="type" required></textarea>
+      <textarea *ngIf="!isTextEditable()" class="form-control" rows="2" formControlName="type" required disabled></textarea>
+    </div>
+    <div *ngIf="formDir.submitted && type.errors">
+      <span class="text-danger ml-3" *ngIf="type.errors.required && formDir.submitted">
+        Típus kötelező
+      </span>
+      <span class="text-danger ml-3" *ngIf="type.errors.maxlength && formDir.submitted">
+        Típus hossza maximum 200 karakter lehet
+      </span>
+    </div>
+  </div>
+  
+  <!--TinyMCE -->
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Kérdés (max 200 karakter)</label>
+    <div class="col-md-12">
+      <editor *ngIf="isTextEditable()"
+        apiKey="xivljdbp51zxo9q44asa1et9i2gb35hc22en9wzg16zt3j79"
+        [disabled]="false"        
+        formControlName="question_text"
+        (onInit)="handleEditorInit($event)"
+        [init]="{
+          height: 200,
+          menubar: false,
+          plugins: [
+            'help wordcount paste'
+          ],
+          toolbar:
+            'undo redo | bold italic'
+        }">
+      </editor>
+      <div *ngIf="question_text.errors && formDir.submitted">        
+        <span class="text-danger ml-3" *ngIf="question_text.errors.required">
+          Kérdés kötelező! (max 200 karakter)
+        </span>
+        <span class="text-danger ml-3" *ngIf="question_text.errors.maxLength">
+          A szöveg túl hosszú!
+        </span>
+    </div>
+      <editor *ngIf="!isTextEditable()"
+        apiKey="xivljdbp51zxo9q44asa1et9i2gb35hc22en9wzg16zt3j79"
+        [disabled]="true"
+        formControlName="question_text"
+        [init]="{
+          height: 200,
+          menubar: false,
+          plugins: [
+            'help wordcount'
+          ],
+          toolbar:
+            'undo redo | bold italic'
+        }">
+      </editor>
+    </div>
+    </div>
+
+    <div class="form-group row" *ngIf="isPictureEditable()">
+      <label class=" control-label col-md-12">Kérdés kép (opcionális)</label>
+      <div class="col-md-12">
+        <div *ngIf="actionType!='Új'" >
+          <img *ngIf="isQuestionPicture" class="center" [src]="createImgPath(QuestionPicture)" alt="question picture" style="width:15%">
+          <a *ngIf="isQuestionPicture" [routerLink]="" (click)="delete(cardId, 'question')" class="btn btn-danger button">Törlés</a>
+        </div>
+        <div>
+          <!-- Upload image component -->
+          <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload>
+        </div>
+      </div>
+    </div>
+
+    <!--TinyMCE -->
+    <div class="form-group row">
+      <label class="control-label col-md-12" for="Body">Válasz (max 200 karakter)</label>
+      <div class="col-md-12">
+        <editor *ngIf="isTextEditable()"
+          apiKey="xivljdbp51zxo9q44asa1et9i2gb35hc22en9wzg16zt3j79"
+          [disabled]="false"        
+          formControlName="answer_text"
+          (onInit)="handleEditorInit($event)"
+          [init]="{
+            height: 200,
+            menubar: false,
+            plugins: [
+              'help wordcount paste'
+            ],
+          toolbar:
+            'undo redo | bold italic'
+        }">
+      </editor>
+      <div *ngIf="answer_text.errors && formDir.submitted">
+        <span class="text-danger ml-3" *ngIf="answer_text.errors.required">
+          Válasz kötelező!  (max 200 karakter)
+        </span>
+        <span class="text-danger ml-3" *ngIf="answer_text.errors.maxLength">
+          A szöveg túl hosszú!
+        </span>
+    </div>
+      <editor *ngIf="!isTextEditable()"
+          apiKey="xivljdbp51zxo9q44asa1et9i2gb35hc22en9wzg16zt3j79"
+          [disabled]="true"        
+          formControlName="answer_text"
+          [init]="{
+            height: 200,
+            menubar: false,
+            plugins: [
+              'help wordcount'
+            ],
+          toolbar:
+            'undo redo | bold italic'
+        }">
+      </editor>
+      </div>
+    </div>
+
+    <div class="form-group row" *ngIf="isPictureEditable()">
+      <label class=" control-label col-md-12">Válasz kép (opcionális)</label>
+      <div class="col-md-12">
+        <div *ngIf="actionType!='Új'">
+          <img *ngIf="isAnswerPicture" class="center" [src]="createImgPath(AnswerPicture)" alt="answer picture" style="width:15%">
+          <a *ngIf="isAnswerPicture" [routerLink]="" (click)="delete(cardId, 'answer')" class="btn btn-danger button">Törlés</a>
+        </div>
+        <div>
+          <!-- Upload image component -->
+          <app-upload (onUploadFinished)="uploadFinishedAnswer($event)"></app-upload>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-success float-right">Mentés</button>
+    </div>
+  </form>
+  <button class="btn btn-secondary float-left" (click)="backClicked()">Vissza</button>

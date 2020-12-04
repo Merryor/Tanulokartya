@@ -1,0 +1,31 @@
+
+h1 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+a {
+    width: 70px;
+}
+a.button {    
+    padding: 6px;
+    margin-right: 10px;
+}
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+ }
+button {
+    padding: 8px;
+    margin: 15px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+table {
+    margin-bottom: 20px;
+}
+td, th {
+    width: 20%;
+}
+td {
+    vertical-align: middle !important;
+}

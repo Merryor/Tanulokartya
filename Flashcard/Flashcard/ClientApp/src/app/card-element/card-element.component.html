@@ -1,0 +1,61 @@
+
+<ng-container *ngIf="(card$ | async) as card; else loading">
+
+<h1 id="tableLabel" *ngIf="card.card_number == 0">Kezdő kártya</h1>
+<h1 id="tableLabel" *ngIf="card.card_number != 0">{{ card.card_number }}. kártya</h1>
+<div class="card">
+  <h4 class="card-header">{{ card.type }}</h4>
+  <div class="card-body">
+    <div class="row ">
+      <div class="col align-self-center border-right">
+        <h4 [innerHTML]="card.question_text">{{ card.question_text }} </h4><br>
+        <img *ngIf="isQuestionPicture" class="center" [src]="createImgPath(card.question_picture)" alt="question picture" style="width:45%">
+      </div>      
+      <div class="col align-self-center">
+        <h4 [innerHTML]="card.answer_text"> {{ card.answer_text }} </h4><br>
+        <img *ngIf="isAnswerPicture" class="center" [src]="createImgPath(card.answer_picture)" alt="question picture" style="width:45%">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Comments -->
+<div *ngIf="(comments$ | async)?.length>0">
+  <div class="card">    
+    <h4 class="card-header">Hozzászólások:</h4>
+    <div class="card-body" *ngFor="let comments of (comments$ | async)">
+      <div class="row">
+        <div class="col align-self-center">
+        {{ comments.user.name }}
+        </div>
+        <div class="col align-self-center">
+          {{ comments.comment_time | date:'yyyy-MM-dd HH:mm:ss'}}
+        </div>
+        <div class="col align-self-center">
+          <div *ngIf="isMyComment(comments.id)" class="col align-self-center">
+            <a [routerLink]="" (click)="delete(comments.id)" class="btn btn-danger btn-sm float-right button">Törlés</a>
+          </div>
+          {{ comments.comment_text }}
+        </div>        
+      </div>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="addComment()" #formDir="ngForm" novalidate>
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Hozzászólás</label>
+    <div class="col-md-12">
+      <textarea class="form-control" rows="2" formControlName="comment" required></textarea>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <button type="submit" class="btn btn-success float-right" [disabled]="!formDir.valid">Mentés</button>
+  </div>
+</form>
+
+<button class="btn btn-secondary float-left" (click)="backClicked()">Vissza</button>
+
+</ng-container>
+<ng-template #loading>Töltés…</ng-template>

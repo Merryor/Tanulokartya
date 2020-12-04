@@ -1,0 +1,14 @@
+ h1 {
+    text-align: center;
+}
+a {
+    padding: 8px;
+    margin-bottom: 15px;
+}
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+ }
+table {
+    margin-bottom: 20px;
+}

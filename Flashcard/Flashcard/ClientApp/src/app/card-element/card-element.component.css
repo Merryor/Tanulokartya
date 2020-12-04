@@ -1,0 +1,29 @@
+h1, h4 {
+    text-align: center;
+    padding: 10px;
+}
+
+button {
+    padding: 8px;
+}
+
+a {
+    width: 80px;
+    padding: 6px;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+.card, form, button {
+    margin: 15px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+textarea {
+    font-size: 15px;
+}

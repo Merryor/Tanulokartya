@@ -1,0 +1,195 @@
+<h1>{{actionType}} felhasználó</h1>
+<h3 *ngIf="isEditRoleTitle">{{ roleToString(existingUser.roles) }}</h3>
+<form [formGroup]="form" (ngSubmit)="save()" #formDir="ngForm" >
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Név</label>
+    <div class="col-md-12">
+      <input class="form-control" type="text" formControlName="name">
+    </div>
+    <div *ngIf="formDir.submitted && name.errors">
+      <span class="text-danger ml-3" *ngIf="name.errors.required && formDir.submitted">
+        Név kötelező
+      </span>
+      <span class="text-danger ml-3" *ngIf="name.errors.maxlength && formDir.submitted">
+        Név hossza maximum 200 karakter lehet
+      </span>
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Telefon</label>
+    <div class="col-md-12">
+      <input class="form-control" type="text" formControlName="phone">
+    </div>
+    <span class="text-danger ml-3" *ngIf="phone.invalid && formDir.submitted">
+      Telefon kötelező
+    </span>
+  </div>
+
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Email</label>
+    <div class="col-md-12">
+      <input class="form-control" type="email" formControlName="email">
+    </div>
+    <div *ngIf="formDir.submitted && email.errors">
+      <span class="text-danger ml-3" *ngIf="email.errors.required && formDir.submitted">
+        Email kötelező
+      </span>
+      <span class="text-danger ml-3" *ngIf="email.errors.email && formDir.submitted">
+        Érvényes email-cím megadása kötelező
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Munkahely</label>
+    <div class="col-md-12">
+      <input class="form-control" type="text" formControlName="workplace">
+    </div>
+    <div *ngIf="formDir.submitted && workplace.errors">
+      <span class="text-danger ml-3" *ngIf="workplace.errors.required && formDir.submitted">
+        Munkahely kötelező
+      </span>
+      <span class="text-danger ml-3" *ngIf="workplace.errors.maxlength && formDir.submitted">
+        Munkahely hossza maximum 200 karakter lehet
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Milyen korosztálynak készít kártyacsomagokat?</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="create_module">
+        <option *ngFor="let mod of modules" [value]="mod.key">{{mod.value}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="create_module.invalid && formDir.submitted">
+      Korosztály kötelező
+    </span>
+  </div>
+
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Milyen korosztálynak készítene később kártyacsomagokat?</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="will_create_module">
+        <option *ngFor="let mod of modules" [value]="mod.key">{{mod.value}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="will_create_module.invalid && formDir.submitted">
+      Korosztály kötelező
+    </span>
+  </div>
+
+  <div class="form-group row" *ngIf="!existingUser" >
+    <label class=" control-label col-md-12">Szerepkör</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="role">
+        <option *ngFor="let role of roles" [value]="role.key">{{role.value}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="role.invalid && formDir.submitted">
+      Szerepkör kötelező
+    </span>
+  </div>
+
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Jelszó</label>
+    <div class="col-md-12">
+      <input class="form-control" type="password" formControlName="password" minlength="5">
+    </div>
+    <div *ngIf="formDir.submitted && password.errors">
+      <span class="text-danger ml-3" *ngIf="password.errors.required && formDir.submitted">
+        Jelszó kötelező
+      </span>
+      <span class="text-danger ml-3" *ngIf="password.errors.minlength && formDir.submitted">
+        Legalább 5 karakter hosszú jelszó megadása kötelező
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class=" control-label col-md-12">Jelszó újra</label>
+    <div class="col-md-12">
+      <input class="form-control" type="password" formControlName="password_again" minlength="5">
+    </div>
+      <div *ngIf="formDir.submitted && form.controls.password_again.errors">
+      <span class="text-danger ml-3" *ngIf="password_again.invalid && formDir.submitted">
+        Jelszó megerősítés kötelező
+      </span>
+      <span class="text-danger ml-3" *ngIf="form.controls.password_again.errors.mustMatch">
+        A két jelszó nem egyezik!
+      </span>
+    </div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-success float-right">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Mentés
+    </button>
+  </div>
+</form>
+
+<div class="gap"></div>
+
+<!--UserRoles -->
+<form *ngIf="isAdmin && !isUserWithTwoRole && isExistingUserAdmin" [formGroup]="plusForm" (ngSubmit)="addPlusRole()" #formDirPlus="ngForm" novalidate>
+<div class="form-group row" *ngIf="existingUser">
+  <label class=" control-label col-md-12">További szerepkör hozzáadása</label>
+  <div class="col-md-12">
+    <select class="form-control" formControlName="plus_role">
+      <option *ngFor="let role of rolesAdmin" [value]="role.key">{{role.value}}</option>
+    </select>
+  </div>
+  <span class="text-danger ml-3" *ngIf="plus_role.invalid && formDirPlus.submitted">
+    További szerepkör kötelező
+  </span>
+</div>
+<div class="form-group" *ngIf="existingUser">
+  <button type="submit" class="btn btn-success float-right" [disabled]="!formDirPlus.valid">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    Mentés
+  </button>
+</div>
+</form>
+
+<h3 *ngIf="isEditRoleTitle && isAdmin">Felhasználó szerepkörei:</h3>
+<form *ngIf="isAdmin && !isUserWithTwoRole && isExistingUserWithProperRole" [formGroup]="plusForm" (ngSubmit)="addPlusRole()" #formDirPlus="ngForm" novalidate>
+  <div class="form-group row" *ngIf="existingUser">
+    <label class=" control-label col-md-12">További szerepkör hozzáadása</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="plus_role">
+        <option *ngFor="let role of roles" [value]="role.key">{{role.value}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="plus_role.invalid && formDirPlus.submitted">
+      További szerepkör kötelező
+    </span>
+  </div>
+  <div class="form-group" *ngIf="existingUser">
+    <button type="submit" class="btn btn-success float-right" [disabled]="!formDirPlus.valid">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Mentés
+    </button>
+  </div>
+  </form>
+
+  <div *ngIf="isEditRoleTitle && isAdmin">
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="existingUser.roles?.length>0">
+      <thead>
+        <tr>
+          <th>Szerepkör</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let role of existingUser.roles">
+          <td>{{ roleToString2(role) }}</td>
+        <td>
+          <a *ngIf="isUserWithTwoRole" [routerLink]="" (click)="delete(role)" class="btn btn-danger btn-sm float-right button">Szerepkör törlése</a>
+          <a *ngIf="!isUserWithTwoRole" [routerLink]="" (click)="delete(role)" class="btn btn-danger btn-sm float-right button disabled">Szerepkör törlése</a>
+        </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

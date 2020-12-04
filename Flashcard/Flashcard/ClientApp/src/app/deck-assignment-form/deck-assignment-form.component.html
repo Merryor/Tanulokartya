@@ -1,0 +1,93 @@
+<h1>{{deckName}} kártyacsomag</h1>
+
+<app-deck-assignment-list></app-deck-assignment-list>
+<br><hr><br>
+
+<h3>Hozzárendelés:</h3>
+<form [formGroup]="form" (ngSubmit)="save()" #formDir="ngForm" novalidate>
+  <!-- Coordinator: assigns main roles -->
+  <div *ngIf="isCurrentCoordinator">
+  <div class="form-group row" *ngIf="!isMainLector">
+    <label class=" control-label col-md-12">Fő Lektor</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="mainLector">
+        <option *ngFor="let mlec of mainLectors" [value]="mlec.id">{{mlec.name}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="mainLector.invalid && formDir.submitted">
+      Fő Lektor kötelező
+    </span>
+  </div>
+
+  <div class="form-group row" *ngIf="!isMainGraphic">
+    <label class=" control-label col-md-12">Fő Grafikus</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="mainGraphic">
+        <option *ngFor="let mgr of mainGraphics" [value]="mgr.id">{{mgr.name}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="mainGraphic.invalid && formDir.submitted">
+      Fő Grafikus kötelező
+    </span>
+  </div>
+
+  <div class="form-group row" *ngIf="!isMainProf">
+    <label class=" control-label col-md-12">Fő Szaklektor</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="mainProf">
+        <option *ngFor="let mprof of mainProfs" [value]="mprof.id">{{mprof.name}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="mainProf.invalid && formDir.submitted">
+      Fő Szaklektor kötelező
+    </span>
+  </div>
+  </div>
+
+  <!-- Main role: assigns his own, provided he is assigned to himself -->
+  <div *ngIf="isCurrentMainLector && isExistingAssignment">
+  <div class="form-group row" *ngIf="!isLector">
+    <label class=" control-label col-md-12">Lektor</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="lector">
+        <option *ngFor="let lec of lectors" [value]="lec.id">{{lec.name}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="lector.invalid && formDir.submitted">
+      Lektor kötelező
+    </span>
+  </div>
+</div>
+
+<div *ngIf="isCurrentMainGraphic && isExistingAssignment">
+  <div class="form-group row" *ngIf="!isGraphic">
+    <label class=" control-label col-md-12">Grafikus</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="graphic">
+        <option *ngFor="let gr of graphics" [value]="gr.id">{{gr.name}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="graphic.invalid && formDir.submitted">
+      Grafikus kötelező
+    </span>
+  </div>
+</div>
+
+<div *ngIf="isCurrentMainProf && isExistingAssignment">
+  <div class="form-group row" *ngIf="!isProf">
+    <label class=" control-label col-md-12">Szaklektor</label>
+    <div class="col-md-12">
+      <select class="form-control" formControlName="prof">
+        <option *ngFor="let prof of profs" [value]="prof.id">{{prof.name}}</option>
+      </select>
+    </div>
+    <span class="text-danger ml-3" *ngIf="prof.invalid && formDir.submitted">
+      Szaklektor kötelező
+    </span>
+  </div>
+</div>
+
+  <div class="form-group">
+    <button type="submit" class="btn btn-success float-right" [disabled]="!formDir.valid">Mentés</button>
+  </div>
+</form>

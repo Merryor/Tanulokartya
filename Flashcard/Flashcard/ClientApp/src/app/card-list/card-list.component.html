@@ -1,0 +1,34 @@
+<h1 id="tableLabel">{{deckName}} csomag kártyái</h1>
+<p><a class="btn btn-primary float-right button mb-3" href="api/pdfcreator/{{deckId}}">PDF</a></p>
+
+<p *ngIf="!(cards$ | async)"><em>Töltés...</em></p>
+<p *ngIf="isCardCreator"> 
+  <a *ngIf="isStatusInitial && isAuthor" [routerLink]="['/card-form/add/', this.deckId]" class="btn btn-primary float-right mb-3 button">Új kártya</a>
+</p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="(cards$ | async)?.length>0">
+  <thead>
+    <tr>
+      <th>Típus</th>
+      <th colspan="2">Kérdés</th>
+      <th colspan="2">Válasz</th>
+      <th *ngIf="isAdmin"></th>
+      <th *ngIf="isStatusInitial"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let card of (cards$ | async)">
+      <td>{{ card.type }}</td>
+      <td><a [routerLink]="['/card-element/', card.id]" [innerHTML]="card.question_text">{{ card.question_text }}</a></td>
+      <td><img *ngIf="isPicture(card.question_picture)" [src]="createImgPath(card.question_picture)" alt="question picture" style="width:20%"></td>
+      <td [innerHTML]="card.answer_text">{{ card.answer_text }}</td>
+      <td><img *ngIf="isPicture(card.answer_picture)" [src]="createImgPath(card.answer_picture)" alt="answer picture" style="width:20%"></td>
+      <td *ngIf="isAdmin || isCardCreator">
+        <a *ngIf="!isActivated" [routerLink]="" (click)="delete(card.id)" class="btn btn-danger btn-sm float-right button">Törlés</a>
+        <a *ngIf="isActivated" [routerLink]="" (click)="delete(card.id)" class="btn btn-danger btn-sm float-right disabled button">Törlés</a>
+      </td>
+      <td *ngIf="isStatusInitial"><a *ngIf="isAuthor" [routerLink]="['/card-form/edit/', this.deckId, card.id]" class="btn btn-primary btn-sm float-right button">Szerkeszt</a></td>  
+    </tr>
+  </tbody>
+</table>
+<button class="btn btn-secondary float-left" (click)="backClicked()">Vissza</button>

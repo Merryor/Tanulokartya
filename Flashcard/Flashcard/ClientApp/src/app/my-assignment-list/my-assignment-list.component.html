@@ -1,0 +1,30 @@
+<h1 id="tableLabel">Saját hozzárendelések</h1>
+
+<p *ngIf="!(deckAssignments$ | async)"><em>Töltés...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="(deckAssignments$ | async)?.length>0">
+  <thead>
+    <tr>
+      <th>Név</th>
+      <th>Tartalom</th>
+      <th>Korosztály</th>
+      <th>Sorszám</th>
+      <th>Szerző</th>
+      <th>Státusz</th>
+      <th>Aktiválva</th>
+      <th *ngIf="isMainPerson"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let deckAssignment of (deckAssignments$ | async)">
+      <td><a [routerLink]="['/card-list/', deckAssignment.deck.id]">{{ deckAssignment.deck.name }}</a></td>
+      <td>{{ deckAssignment.deck.content }}</td>
+      <td>{{ moduleToString(deckAssignment.deck.module) }}</td>
+      <td>{{ deckAssignment.deck.deck_number }}</td>
+      <td>{{ deckAssignment.deck.applicationUser.name }}</td>
+      <td>{{ statusToString(deckAssignment.deck.status) }}</td>
+      <td>{{ activateToString(deckAssignment.deck.activated) }}</td>
+      <td *ngIf="isMainPerson"><a [routerLink]="['/deck-assignment-form/', deckAssignment.deck.id]" class="btn btn-info btn-sm float-right">Hozzárendelés</a></td>
+    </tr>
+  </tbody>
+</table>
